@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  ai:
+    build: ./detec
+    volumes:
+      - ./volume/ai:/app/data
+    depends_on:
+      - db
+  web:
+    build: ./pulsecorp
+    command: python3 manage.py runserver 0.0.0.0:8000
+    # volumes:
+    #   - ./volume/app:/app/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+
+  
+  db:
+    build: ./postgres
+    ports:
+      - 6666:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=postgres
+
+volumes:
+  postgres_data:

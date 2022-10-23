@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_block %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        
+        <div class="row" style="margin-top: 30px; width: auto !important;">
+            <div class="col-5 offset-1">
+                <div class="form-group">
+                    <label>Choose file</label>
+                    <div class="custom-file">
+                        <input type="file" name="file" class="custom-file-input" id="validatedCustomFile" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+
+    </form>
+{% endblock %}
+
+{% endblock %}

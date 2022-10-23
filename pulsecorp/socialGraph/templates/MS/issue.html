@@ -1,0 +1,42 @@
+<!-- Copyright (c) Microsoft Corporation.
+     Licensed under the MIT License. -->
+
+<!-- <projectSnippet> -->
+    {% extends "MS/layout.html" %}
+    {% block content %}
+    <h1>Issue</h1>
+    <table class="table">
+      <thead>
+        <tr>
+            <th scope="col">Issue</th>
+            <th scope="col">Assignee</th>
+            <th scope="col">Create Date</th>
+            <th scope="col">Due Date</th>
+            <th scope="col">Resolution Date</th>
+            <th scope="col">status</th>
+            <th scope="col">Summary</th>
+            <!-- <th scope="col">description</th> -->
+            <th scope="col">reporter</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if issues %}
+          {% for issue in issues %}
+            <tr>
+                <td>{{ issue.name }}</td>
+                <td>{{ issue.assignee }}</td>
+                <td>{{ issue.createDate }}</td>
+                <td>{{ issue.dueDate }}</td>
+                <td>{{ issue.resolutionDate }}</td>
+                <td>{{ issue.status }}</td>
+                <td>{{ issue.summary }}</td>
+                <!-- <td>{{ issue.description }}</td> -->
+                <td>{{ issue.reporter }}</td>
+            </tr>
+          {% endfor %}
+        {% endif %}
+      </tbody>
+    </table>
+    {% endblock %}
+    <!-- </projectSnippet> -->
+    
