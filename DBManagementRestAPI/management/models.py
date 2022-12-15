@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 class UserProfile(models.Model):
+    id = models.BigAutoField(primary_key=True)
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
     email_address = models.EmailField(max_length=254)
@@ -32,6 +33,7 @@ class UserProfile(models.Model):
         return self.user.username
 
 class Email(models.Model):
+    id = models.BigAutoField(primary_key=True)
     text = models.TextField()
     employee =  models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     received_datetime = models.DateTimeField()

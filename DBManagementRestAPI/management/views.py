@@ -116,8 +116,12 @@ def mail_detail(request, pk):
 
 @api_view(['GET'])
 def user_mails(request,pk):
-    emails = Email.objects.filter(employee=pk)
-        
+    print(pk)
+    emails = Email.objects.all()
+    #emails = Email.objects.filter(employee=int(pk))
+    #emails = emails.filter(lambda x: x['employee']==pk)
+    emails = [x for x in emails if x.employee==int(pk)]
+    print(emails)
     if request.method == 'GET': 
         emails_serializer = EmailSerializer(emails, many=True)
         return JsonResponse(emails_serializer.data, safe=False)
