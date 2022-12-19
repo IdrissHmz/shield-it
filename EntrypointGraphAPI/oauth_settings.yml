@@ -1,0 +1,40 @@
+app_id: "7c293beb-61ff-4bbb-9b63-5f09995d0311"
+app_secret: "0vK8Q~h3rJSP9Qy~nlDAMpWp14nxxEPtn0ndjbV5"
+redirect: "http://localhost:8000/callback"
+scopes:
+  - user.read
+  - mailboxsettings.read
+  - calendars.readwrite
+  - User.Read.All
+  - Mail.Read
+  - Mail.Read.Shared
+  - Mail.ReadBasic
+  - Mail.ReadWrite
+  - Mail.ReadWrite.Shared
+  - Member.Read.Hidden
+  - AdministrativeUnit.Read.All
+  - AdministrativeUnit.ReadWrite.All
+  - Chat.Read
+  - Chat.ReadBasic
+  - Chat.ReadWrite
+  - ChatMember.Read
+  - ChatMember.ReadWrite
+  - Contacts.Read
+  - Contacts.Read.Shared
+  - Contacts.ReadWrite
+  - Contacts.ReadWrite.Shared
+  - Domain.Read.All
+  - Domain.ReadWrite.All
+  - IdentityProvider.Read.All
+  - IdentityProvider.ReadWrite.All
+  - Group.Read.All
+  - Group.ReadWrite.All
+  - IdentityUserFlow.Read.All
+  - IdentityUserFlow.ReadWrite.All
+  - Organization.Read.All
+  - Organization.ReadWrite.All
+  - Team.ReadBasic.All
+  - Team.Create
+  - TeamMember.Read.All
+  - TeamMember.ReadWrite.All
+authority: "https://login.microsoftonline.com/common"

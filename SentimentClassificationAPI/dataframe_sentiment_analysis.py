@@ -90,26 +90,24 @@ def analysis(df_test):
     exclude_words = set(pronouns_list)
     lemmatizer = WordNetLemmatizer()
     new_stop_words = stop_words.difference(exclude_words)
-    
+
       
     df_test['total_words_body']= df_test['body'].str.split().str.len()
     df_test.drop(df_test.index[df_test['total_words_body'] >1000], inplace=True) # drop rows having number of words greate than 1000 in body
-    
+
     df_test['clean_text']=df_test['body'].apply(lambda x: clean_text(x))
-    
+
 
     df_test.drop(labels='body', axis=1, inplace=True)
     
     df_test['ratio_1st_person']=df_test['clean_text'].apply(lambda x: caluculate_1st_person_ratio(x))
 
- 
 
-    x_test_f=tokenizer.texts_to_sequences(df_test)
-    x_test_pad=pad_sequences(x_test_f,maxlen=80,padding='post')
-    
+
     df_test['predicted_sentiment'] =  get_sentiment(df_test['clean_text'])
     loaded_model_toxicity= pickle.load(open('data_light/nb_tfidf.sav', 'rb'))
     predicted_toxicity = loaded_model_toxicity.predict(df_test.clean_text.values)
     df_test['predicted_toxicity']= predicted_toxicity
+
     return df_test
     

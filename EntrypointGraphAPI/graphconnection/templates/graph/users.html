@@ -1,0 +1,30 @@
+<!-- Copyright (c) Microsoft Corporation.
+     Licensed under the MIT License. -->
+
+{% extends "graph/layout.html" %}
+{% block content %}
+<h1>Users</h1>
+<a href="/calendar/new" class="btn btn-light btn-sm mb-3">New event</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Display Name</th>
+            <th scope="col">Job Title</th>
+            <th scope="col">Mail</th>
+            <th scope="col">Preferred Language</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if users %}
+        {% for user in users %}
+        <tr>
+            <td>{{ user.displayName }}</td>
+            <td>{{ user.jobTitle }}</td>
+            <td>{{ user.mail }}</td>
+            <td>{{ user.preferredLanguage }}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}

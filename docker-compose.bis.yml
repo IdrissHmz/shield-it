@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  classification:
+    build: ./SentimentClassificationAPI
+    ports:
+      - 80:80
+    # volumes:
+    #   - ./volume/ai:/app/data
+
+  management:
+    build: ./DBManagementRestAPI
+    command: ./entrypoint.sh
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
+    # volumes:
+    #   - ./volume/app:/app/
+
+    env_file:
+      - ./.env.dev
+
+  db:
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27017:27017
+    expose:
+      - "27017"
+    volumes:
+      - mongo_data:/var/lib/mongo/data/
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: root
+
+  mongo_bi:
+    image: mongo-bi
+    container_name: mongo_bi
+    build:
+      context: ./MongoBIConnector
+    #entrypoint: ['/bin/sh', '-c', 'sleep 100000']
+    restart: always
+    ports:
+      - 3307:3307
+    environment:
+      # CONFIG_MONGO_BI_MONGO_USERNAME: root
+      # CONFIG_MONGO_BI_MONGO_PASSWORD: root
+      # CONFIG_MONGO_BI_AUTH: 1
+      CONFIG_MONGO_BI_MONGO_URI: mongodb://db:27017
+      CONFIG_MONGO_BI_VERY_VERBOSE: 1
+      CONFIG_MONGO_BI_SCHEMA_REFRESH_INTERVAL_SECS: 60
+      CONFIG_MONGO_BI_SSL_MODE: allowSSL
+      CONFIG_MONGO_BI_SSL_PEM_KEY_FILE: /ssl/mongobi.pem
+    volumes:
+      - ./volume/mongo-bi/ssl:/ssl
+    depends_on:
+      - db
+
+  superset:
+    image: burnout-superset
+    container_name: burnout-superset
+    build:
+      context: ./Superset
+    dns:
+      - 8.8.8.8
+      - 4.4.4.4
+      - 192.168.9.45
+    environment:
+      ENABLE_DEV_MODE: 1
+      ADMIN_USERNAME: admin
+      ADMIN_EMAIL: admin@dev.local
+      ADMIN_PASSWORD: admin
+    ports:
+      - 8088:8088
+    depends_on:
+      - db
+
+  graph:
+    build: ./EntrypointGraphAPI
+    command: ./entrypoint.sh
+    depends_on:
+      - db
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.dev
+
+volumes:
+  mongo_data:

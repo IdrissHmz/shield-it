@@ -6,14 +6,32 @@ import pandas as pd
 import json
 from dataframe_sentiment_analysis import analysis
 from sentence_analysis import analyse_sentence
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+origins = [
+    "http://0.0.0.0:80",
+    "http://0.0.0.0",
+    "http://localhost",
+    "http://localhost:80",
+    "172.17.0.1",
+    "172.17.0.1:*",
+    "http://172.17.0.1",
+    "http://172.17.0.1:*",
+]
 
-class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: Union[bool, None] = None
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+class DFrame(BaseModel):
+    df: str
+    
 
 
 class Email(BaseModel):
@@ -30,16 +48,22 @@ def read_root():
 
 @app.post("/sentiment/classifysentence")
 def predict_sentiment(email: Email):
-    return analyse_sentence(email)
+    return analyse_sentence(email.text)
 
 @app.post("/sentiment/classifydf")
-def predict_sentiment_df(df_in: str):
-    df = pd.DataFrame.read_json(df_in)
+def predict_sentiment_df(df_in: DFrame):
+    df = pd.read_json(df_in.df)
     df = analysis(df)
     return {"result_dataframe": df.to_json()}
 
 
-    # uvicorn main:app --reload
+# uvicorn main:app --reload
+
+# docker run -p 80:80 sentiment_classification_api
+# docker build -t sentiment_classification_api .
+
+
+
 
 
 

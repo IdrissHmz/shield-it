@@ -25,7 +25,14 @@ SECRET_KEY = 'wp@5xhbs@8#422xq7*4i9pt=6-l#j4&*uxb_0w5z9*kdh9qnb0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "0.0.0.0:80",
+    "0.0.0.0",
+    "localhost",
+    "localhost:80",
+    "172.17.0.1",
+    "172.17.0.1:*",
+] #os.environ.get("DJANGO_ALLOWED_HOSTS", localhost)
 
 
 # Application definition
@@ -86,10 +93,17 @@ WSGI_APPLICATION = 'DBManagementRestAPI.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
+        'ENGINE': os.environ.get("NOSQL_ENGINE", "djongo"),
         'NAME': 'shield_db',
-        'HOST': '127.0.0.1',
-        'PORT': 27017,
+        "HOST": 'db',
+        "PORT": os.environ.get("NOSQL_PORT", "27017"),
+        'CLIENT': {
+            'host': 'mongodb://db:27017',
+            # 'username': 'root',
+            # 'password': 'mongoadmin',
+            # 'authSource': 'admin',
+            # 'authMechanism': 'SCRAM-SHA-1',
+        }
     }#docker run --name mongodb -d -p 27017:27017 mongo
 }
 # python manage.py makemigrations management
@@ -115,8 +129,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
+    'http://0.0.0.0:8081',
     'http://localhost:8081',
 )
 

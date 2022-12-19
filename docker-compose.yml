@@ -19,11 +19,11 @@ services:
     depends_on:
       - db
 
-  
   db:
     build: ./postgres
     ports:
       - 6666:5432
+
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:

@@ -1,9 +1,11 @@
+import json
 from django.shortcuts import render
 
 # Create your views here.
 from django.shortcuts import render
 
 from django.http.response import JsonResponse
+import requests
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
  
@@ -116,7 +118,7 @@ def mail_detail(request, pk):
 
 @api_view(['GET'])
 def user_mails(request,pk):
-    print(pk)
+
     emails = Email.objects.all()
     #emails = Email.objects.filter(employee=int(pk))
     #emails = emails.filter(lambda x: x['employee']==pk)
@@ -125,3 +127,22 @@ def user_mails(request,pk):
     if request.method == 'GET': 
         emails_serializer = EmailSerializer(emails, many=True)
         return JsonResponse(emails_serializer.data, safe=False)
+
+
+
+@api_view(['POST'])
+def analyse_sentence(request):
+    payload = json.loads(request.body)
+    rep = requests.post("http://0.0.0.0:80/sentiment/classifysentence", json=dict(payload)).text
+    rep = json.loads(rep)
+    return JsonResponse(rep, safe=False)
+
+@api_view(['POST'])
+def analyse_batch(request):
+    payload = json.loads(request.body)
+    payload={
+    "df" : payload
+    }
+    rep = requests.post("http://0.0.0.0:80/sentiment/classifydf", json=payload).text  
+    rep = json.loads(rep)
+    return JsonResponse(rep, safe=False)  

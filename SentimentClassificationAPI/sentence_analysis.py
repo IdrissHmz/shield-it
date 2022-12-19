@@ -9,10 +9,12 @@ from nltk.stem import WordNetLemmatizer
 from unidecode import unidecode
 from keras.models import load_model
 from keras.preprocessing.sequence import pad_sequences
+import json
 
 nltk.download('stopwords')
 nltk.download('wordnet')
 nltk.download('punkt')
+
 
 
 
@@ -24,7 +26,7 @@ nltk.download('punkt')
 def clean_sentence(x,special_character_removal,new_stop_words,lemmatizer):
     x_ascii = unidecode(x)
     x_clean = special_character_removal.sub('',x_ascii)    
-    x_clean=x_clean.lower()
+    x_clean=str(x_clean).lower()
     translator = str.maketrans('', '', string.punctuation)
     x_clean=x_clean.translate(translator)
     word_tokens = word_tokenize(x_clean) 
@@ -56,8 +58,7 @@ def caluculate_1st_person_ratio(text,pronouns_list):
 #==========================================================================
 
 def get_sentiment(text,tokenizer,loaded_model_sentiments):  
-    x_test_f=tokenizer.texts_to_sequences(text)
-    x_test_pad=pad_sequences(x_test_f,maxlen=80,padding='post')
+    x_test_pad=pad_sequences(text,maxlen=80,padding='post')
     y_pred=loaded_model_sentiments.predict_classes(x_test_pad)
     sentiment=y_pred
     return sentiment     
@@ -80,15 +81,13 @@ def analyse_sentence(text):
     new_stop_words = stop_words.difference(exclude_words)
 
 
-    total_words_body = text.str.split().str.len()
+    total_words_body = len(text.split())
     clean_text = clean_sentence(text,special_character_removal,new_stop_words,lemmatizer)
     ratio_1st_person = caluculate_1st_person_ratio(text,pronouns_list)
     text_seq=tokenizer.texts_to_sequences(clean_text)
     predicted_sentiment = get_sentiment(text_seq,tokenizer,loaded_model_sentiments)
-    predicted_toxicity = loaded_model_toxicity.predict(clean_text)
-    return {'total_words_body':total_words_body,'ratio_1st_person':ratio_1st_person,'predicted_sentiment':predicted_sentiment,'predicted_toxicity':predicted_toxicity}
-
-
-
+    predicted_toxicity = loaded_model_toxicity.predict([clean_text])
+    resp = {'total_words_body':int(total_words_body),'ratio_1st_person':float(ratio_1st_person),'predicted_sentiment':[int(x) for x in predicted_sentiment],'predicted_toxicity':int(list(predicted_toxicity)[0])}
+    return json.dumps(resp)
 
 

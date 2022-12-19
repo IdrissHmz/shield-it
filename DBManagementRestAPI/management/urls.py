@@ -7,4 +7,7 @@ urlpatterns = [
     re_path(r'^api/mails$', views.mail_list),
     re_path(r'^api/mails/(?P<pk>[0-9]+)$', views.mail_detail),
     re_path(r'^api/(?P<pk>[0-9]+)/mails$', views.user_mails),
+    re_path(r'^api/(?P<pk>[0-9]+)/mails$', views.user_mails),
+    re_path(r'^api/sentiments/sentence$', views.analyse_sentence),
+    re_path(r'^api/sentiments/batch$', views.analyse_batch),
 ]
