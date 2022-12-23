@@ -1,12 +1,19 @@
 version: '3.8'
 
 services:
-  classification:
+  sentiment:
     build: ./SentimentClassificationAPI
+    restart: always
     ports:
       - 80:80
     # volumes:
     #   - ./volume/ai:/app/data
+
+    # topic:
+    #   build: ./TopicClassificationAPI
+    #   restart: always
+    #   ports:
+    #     - 81:81
 
   management:
     build: ./DBManagementRestAPI
@@ -29,14 +36,14 @@ services:
     expose:
       - "27017"
     volumes:
-      - mongo_data:/var/lib/mongo/data/
+      - ./volume/db:/data/db
     # environment:
     #   MONGO_INITDB_ROOT_USERNAME: root
     #   MONGO_INITDB_ROOT_PASSWORD: root
 
   mongo_bi:
     image: mongo-bi
-    container_name: mongo_bi
+    #container_name: mongo_bi
     build:
       context: ./MongoBIConnector
     #entrypoint: ['/bin/sh', '-c', 'sleep 100000']
@@ -59,9 +66,10 @@ services:
 
   superset:
     image: burnout-superset
-    container_name: burnout-superset
+    #container_name: burnout-superset
     build:
       context: ./Superset
+    restart: always
     dns:
       - 8.8.8.8
       - 4.4.4.4
@@ -75,6 +83,9 @@ services:
       - 8088:8088
     depends_on:
       - db
+    # volumes:
+    #   - ./volume/superset:/app
+    #mongobi://mongo_bi:3307/shield_db
 
   graph:
     build: ./EntrypointGraphAPI
@@ -85,6 +96,15 @@ services:
       - 8000:8000
     env_file:
       - ./.env.dev
-
+  # react-app:
+  #   container_name: react_app
+  #   restart: on-failure
+  #   build: .
+  #   volumes:
+  #         - ./src:/app/src
+  #   ports:
+  #         - "3000:3000"
+  #   command: >
+  #         sh -c "yarn start"
 volumes:
   mongo_data:

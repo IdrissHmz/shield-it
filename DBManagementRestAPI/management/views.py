@@ -14,7 +14,7 @@ from management.models import Email
 from management.serializers import UserSerializer
 from management.serializers import EmailSerializer
 from rest_framework.decorators import api_view
-
+#viewsets.ModelViewSet
 
 @api_view(['GET', 'POST', 'DELETE'])
 def user_list(request):
